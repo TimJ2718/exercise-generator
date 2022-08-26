@@ -1,6 +1,7 @@
 package main
 
 import (
+	"exercise-generator/selector"
 	"fmt"
 	"os"
 	"strconv"
@@ -15,9 +16,7 @@ func main() {
 	for i, v := range os.Args[1:] {
 		recognise_parameter(i, v)
 	}
-	fmt.Printf("n: %v\n", n)
-	fmt.Printf("m: %v\n", m)
-	fmt.Printf("exercise: %v\n", exercise)
+	selector.SelectExercise(exercise, n, m)
 }
 
 func recognise_parameter(i int, v string) {
