@@ -1,4 +1,4 @@
-package determinant
+ package determinant
 
 import (
   "math/rand"
@@ -59,17 +59,18 @@ func generate3Mat() {
   exercise+="$"+mat.Tex()+"$"
   solution+="$\\det("+mat.Tex()+") \\\\ \n"
   m := " \\cdot "
-  solution+="="+mat[0][0].Tex()+m+mat[1][1].Tex()+m+mat[2][2].Tex()+"+"+mat[0][1].Tex()+m+mat[1][2].Tex()+m+mat[2][0].Tex()+"+"+mat[0][2].Tex()+m+mat[1][0].Tex()+m+mat[2][1].Tex()+"\n"
-  solution+="-"+mat[2][0].Tex()+m+mat[1][1].Tex()+m+mat[0][2].Tex()+"-"+mat[2][1].Tex()+m+mat[1][2].Tex() +m+mat[0][1].Tex()+"-"+mat[2][2].Tex()+m+mat[1][0].Tex()+m+mat[0][1].Tex()+"\n"
-
-  solution +="$"
+  solution+="="+mat[0][0].Tex()+m+mat[1][1].Tex()+m+mat[2][2].Tex()+"+"+mat[0][1].Tex()+m+mat[1][2].Tex()+m+mat[2][0].Tex()+"+"+mat[0][2].Tex()+m+mat[1][0].Tex()+m+mat[2][1].Tex()
+  solution+="-"+mat[2][0].Tex()+m+mat[1][1].Tex()+m+mat[0][2].Tex()+"-"+mat[2][1].Tex()+m+mat[1][2].Tex() +m+mat[0][1].Tex()+"-"+mat[2][2].Tex()+m+mat[1][0].Tex()+m+mat[0][1].Tex()+"\n \\\\"
+  solution+="="+(mat[0][0]*mat[1][1]*mat[2][2]).Tex()+"+"+(mat[0][1]*mat[1][2]*mat[2][0]).Tex()+"+"+(mat[0][2]+mat[1][0]+mat[2][1]).Tex()
+  solution+="-"+(mat[2][0]*mat[1][1]*mat[0][2]).Tex()+"-"+(mat[2][1]*mat[1][2]*mat[0][0]).Tex()+"-"+(mat[2][0]*mat[1][0]*mat[0][1]).Tex()+"\n \\\\"
+  solution +="="+mat.Det().Tex()+"$"
 }
 
 
 func Generate(name string,n int){
   exercise = "Determine the determinant of the matrix:\\\\ \n \\ \\\\ \n "
   switch n{
-  case 20:
+  case 2:
       generate2Mat()
     default:
       generate3Mat()

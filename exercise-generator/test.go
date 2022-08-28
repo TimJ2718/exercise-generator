@@ -5,5 +5,5 @@ import (
 )
 
 func main(){
-  	selector.SelectExercise("determinant", 0, 0)
+  	selector.SelectExercise("determinant", 3, 0)
 }
