@@ -1,12 +1,9 @@
  package determinant
 
 import (
-  "math/rand"
-  "math"
-  "time"
   "exercise-generator/mathtypes"
   "exercise-generator/textofile"
-//  "fmt"
+  "fmt"
 )
 
 
@@ -15,12 +12,11 @@ var exercise string
 var solution string
 // Generates matrix with easy determinant
 func generate2Mat() {
-	rand.Seed(time.Now().UnixNano())
 	var mat mathtypes.Matrix
 		for i := 0; i < 2; i++ {
 			var x []mathtypes.Number
 			for j := 0; j < 2; j++ {
-				x = append(x, mathtypes.Number(rand.Intn(19)-9))
+				x = append(x, mathtypes.Random())
 			}
 			mat = append(mat, x)
 		}
@@ -30,48 +26,49 @@ func generate2Mat() {
     solution+=mat.Det().Tex()+"$"
 }
 
-//create a Matrix where the abosolute value of the product of each diagonal line is smaller 150
-func get3Matrix() mathtypes.Matrix{
-  var max float64 = 150
-  rand.Seed(time.Now().UnixNano())
-  x := mathtypes.Matrix{{0,0,0},{0,0,0},{0,0,0}}
-  for {
-    for i :=0 ; i<3 ; i++{
-      for {
-        for j := 0; j <3; j++{
-          x[i][j]= mathtypes.Number(rand.Intn(19)-9)
-        }
-        if math.Abs(float64(x[i][0]*x[i][1]*x[i][2])) < max{
-          break
-        }
-      }
-    }
-    if (math.Abs(float64(x[0][0]*x[1][0]*x[2][0]))<max) && (math.Abs(float64(x[0][1]*x[1][1]*x[2][1]))<max) && (math.Abs(float64(x[0][2]*x[1][2]*x[2][2]))<max){
-      break
-    }
-  }
-  return mathtypes.Matrix{{x[0][0],x[1][0],x[2][0]},{x[2][1],x[0][1],x[1][1]},{x[1][2],x[2][2],x[0][2]}}
 
-}
 
 func generate3Mat() {
-  mat := get3Matrix()
+  mat := mathtypes.Get3Matrix()
   exercise+="$"+mat.Tex()+"$"
   solution+="$\\det("+mat.Tex()+") \\\\ \n"
-  m := " \\cdot "
-  solution+="="+mat[0][0].Tex()+m+mat[1][1].Tex()+m+mat[2][2].Tex()+"+"+mat[0][1].Tex()+m+mat[1][2].Tex()+m+mat[2][0].Tex()+"+"+mat[0][2].Tex()+m+mat[1][0].Tex()+m+mat[2][1].Tex()
-  solution+="-"+mat[2][0].Tex()+m+mat[1][1].Tex()+m+mat[0][2].Tex()+"-"+mat[2][1].Tex()+m+mat[1][2].Tex() +m+mat[0][1].Tex()+"-"+mat[2][2].Tex()+m+mat[1][0].Tex()+m+mat[0][1].Tex()+"\n \\\\"
-  solution+="="+(mat[0][0]*mat[1][1]*mat[2][2]).Tex()+"+"+(mat[0][1]*mat[1][2]*mat[2][0]).Tex()+"+"+(mat[0][2]+mat[1][0]+mat[2][1]).Tex()
-  solution+="-"+(mat[2][0]*mat[1][1]*mat[0][2]).Tex()+"-"+(mat[2][1]*mat[1][2]*mat[0][0]).Tex()+"-"+(mat[2][0]*mat[1][0]*mat[0][1]).Tex()+"\n \\\\"
-  solution +="="+mat.Det().Tex()+"$"
+  solution+=mat.DetTex()+"$"
 }
 
+func generate4Mat() {
+  mat:= mathtypes.Get3Matrix()
+  j:= mathtypes.RandomInt(0,3) //Position of new Row
+  ic:=mathtypes.RandomInt(0,2) //Position of copied Column for new Column
+  p:=mathtypes.Number(mathtypes.RandomIntExcept(-2,2,[]int{0})) //  Different Element for new Column
+  mul:= mathtypes.Number(mathtypes.RandomIntExcept(-2,2, []int{0})) //Multiplayer new Column
+  i:= mathtypes.RandomInt(0,3) //Position of new Column
+  col := mathtypes.GetVector(3)
+  mat = mathtypes.AddColumn(mat,col,j)
+  row := make(mathtypes.Vector, len(mat[ic]))
+  copy(row,mathtypes.Vector(mat[ic]))
+  if ic >= i{
+    ic+=1
+  }
+  row = mathtypes.ScalarMultiplication(mul,row)
+  row[j]=row[j]+mathtypes.Number(p)
+  row2 :=make(mathtypes.Vector, len(mat[0]))
+  row2[j]=p
+  mat2 := mathtypes.AddRow(mat,row2,i)
+  mat = mathtypes.AddRow(mat,row,i)
+  fmt.Printf("Test1 %v",mat.Tex())
+  exercise+="$"+mat.Tex()+"$"
+  solution+="Add "+mul.Tex() +" times row "+mathtypes.Number(ic+1).Tex()+" to row "+mathtypes.Number(i+1).Tex()+": \\\\ \n"
+  solution+="$\\det("+mat.Tex()+")=\\det("+mat2.Tex()+")$ \\\\"
+
+}
 
 func Generate(name string,n int){
   exercise = "Determine the determinant of the matrix:\\\\ \n \\ \\\\ \n "
   switch n{
-  case 2:
+    case 2:
       generate2Mat()
+    case 4:
+      generate4Mat()
     default:
       generate3Mat()
   }
