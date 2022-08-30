@@ -4,6 +4,7 @@ import (
   "exercise-generator/mathtypes"
   "exercise-generator/textofile"
   "fmt"
+  "math"
 )
 
 
@@ -43,22 +44,32 @@ func generate4Mat() {
   mul:= mathtypes.Number(mathtypes.RandomIntExcept(-2,2, []int{0})) //Multiplayer new Column
   i:= mathtypes.RandomInt(0,3) //Position of new Column
   col := mathtypes.GetVector(3)
-  mat = mathtypes.AddColumn(mat,col,j)
-  row := make(mathtypes.Vector, len(mat[ic]))
-  copy(row,mathtypes.Vector(mat[ic]))
+  mat2 := mathtypes.AddColumn(mat,col,j)
+  row := make(mathtypes.Vector, len(mat2[ic]))
+  copy(row,mathtypes.Vector(mat2[ic]))
   if ic >= i{
     ic+=1
   }
   row = mathtypes.ScalarMultiplication(mul,row)
   row[j]=row[j]+mathtypes.Number(p)
-  row2 :=make(mathtypes.Vector, len(mat[0]))
+  row2 :=make(mathtypes.Vector, len(mat2[0]))
   row2[j]=p
-  mat2 := mathtypes.AddRow(mat,row2,i)
-  mat = mathtypes.AddRow(mat,row,i)
+  mat3 := mathtypes.AddRow(mat2,row2,i)
+  mat2 = mathtypes.AddRow(mat2,row,i)
   fmt.Printf("Test1 %v",mat.Tex())
-  exercise+="$"+mat.Tex()+"$"
-  solution+="Add "+mul.Tex() +" times row "+mathtypes.Number(ic+1).Tex()+" to row "+mathtypes.Number(i+1).Tex()+": \\\\ \n"
-  solution+="$\\det("+mat.Tex()+")=\\det("+mat2.Tex()+")$ \\\\"
+  m :=" \\cdot "
+  newl := "\\\\ \n \\ \\\\ \n"
+  exercise+="$"+mat2.Tex()+"$"
+  solution+="Add "+mul.Tex() +" times row "+mathtypes.Number(ic+1).Tex()+" to row "+mathtypes.Number(i+1).Tex()+": " + newl
+  solution+="$\\det("+mat2.Tex()+")=\\det("+mat3.Tex()+")$ "+newl
+  solution+="Expand matrix along row "+mathtypes.Number(i+1).Tex()+":" +newl
+  solution+="$\\det("+mat3.Tex()+")="+"(-1)^{"+mathtypes.Number(i+1).Tex()+"+"+mathtypes.Number(j+1).Tex()+"}"+m+p.Tex()+m+"\\det("+mat.Tex()+")$" +newl
+  solution+="Calculate determinant of smaller matrix:" + newl
+  solution+="$\\det("+mat.Tex()+")" +newl
+  solution+=mat.DetTex()+"$"+newl
+  solution+="Combine solutions:" +newl
+  solution+="$\\det("+mat2.Tex()+")="+ mathtypes.Number(math.Pow(-1,float64(i+j))).Tex() +m+p.Tex()+m+mat.Det().Tex()+"="+mat2.Det().Tex()+"$"
+
 
 }
 
