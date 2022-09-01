@@ -35,5 +35,12 @@ func recognise_parameter(i int, v string) {
 }
 
 func printhelp() {
-	fmt.Printf("Help will be added soon \n")
+	help:="This program generates math exercises in Latex.files.\n"
+	help+="The exercise is generated with the command: \"exercise-generator NameOfExercise -n {nvalue} -m m{value}\" \n"
+	help+="The exercise is saved in the file \"NameOfExercise-ex.tex\" and the solution in \"NameOfExercise-sol.tex\"\n"
+	help+="n and m are optional parameter. If no value is passed, the default value is used.\n"
+	help+="Exercises:\n"
+	help+=" \"determinat -n <nvalue>\"  n ∈ {2,3,4} \n   Calculate the determinat of a nxn Matrix.\n"
+	help+=" \"gramschmidt -n <nvalue> -m <mvalue>\"  n ∈ Z ∩ n>=2, m ∈ Z ∩ n>=m>=2 \n   Orthogonalise a set of m vectors with the dimension n.\n"
+	fmt.Printf(help)
 }

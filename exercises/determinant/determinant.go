@@ -3,7 +3,6 @@
 import (
   "exercise-generator/mathtypes"
   "exercise-generator/textofile"
-  "fmt"
   "math"
 )
 
@@ -56,11 +55,13 @@ func generate4Mat() {
   row2[j]=p
   mat3 := mathtypes.AddRow(mat2,row2,i)
   mat2 = mathtypes.AddRow(mat2,row,i)
-  fmt.Printf("Test1 %v",mat.Tex())
+  variant := mathtypes.RandomInt(0,1) != 0
+  variant = false
   m :=" \\cdot "
   newl := "\\\\ \n \\ \\\\ \n"
+  if variant{
   exercise+="$"+mat2.Tex()+"$"
-  solution+="Add "+mul.Tex() +" times row "+mathtypes.Number(ic+1).Tex()+" to row "+mathtypes.Number(i+1).Tex()+": " + newl
+  solution+="Add "+(-mul).Tex() +" times row "+mathtypes.Number(ic+1).Tex()+" to row "+mathtypes.Number(i+1).Tex()+": " + newl
   solution+="$\\det("+mat2.Tex()+")=\\det("+mat3.Tex()+")$ "+newl
   solution+="Expand matrix along row "+mathtypes.Number(i+1).Tex()+":" +newl
   solution+="$\\det("+mat3.Tex()+")="+"(-1)^{"+mathtypes.Number(i+1).Tex()+"+"+mathtypes.Number(j+1).Tex()+"}"+m+p.Tex()+m+"\\det("+mat.Tex()+")$" +newl
@@ -69,7 +70,18 @@ func generate4Mat() {
   solution+=mat.DetTex()+"$"+newl
   solution+="Combine solutions:" +newl
   solution+="$\\det("+mat2.Tex()+")="+ mathtypes.Number(math.Pow(-1,float64(i+j))).Tex() +m+p.Tex()+m+mat.Det().Tex()+"="+mat2.Det().Tex()+"$"
-
+  }else{
+    exercise+="$"+mat2.Rotate().Tex()+"$"
+    solution+="Add "+(-mul).Tex() +" times column "+mathtypes.Number(4-ic).Tex()+" to column "+mathtypes.Number(4-i).Tex()+": " + newl
+    solution+="$\\det("+mat2.Rotate().Tex()+")=\\det("+mat3.Rotate().Tex()+")$ "+newl
+    solution+="Expand matrix along row "+mathtypes.Number(4-i).Tex()+":" +newl
+    solution+="$\\det("+mat3.Rotate().Tex()+")="+"(-1)^{"+mathtypes.Number(j+1).Tex()+"+"+mathtypes.Number(4-i).Tex()+"}"+m+p.Tex()+m+"\\det("+mat.Rotate().Tex()+")$" +newl
+    solution+="Calculate determinant of smaller matrix:" + newl
+    solution+="$\\det("+mat.Rotate().Tex()+")" +newl
+    solution+=mat.Rotate().DetTex()+"$"+newl
+    solution+="Combine solutions:" +newl
+    solution+="$\\det("+mat2.Rotate().Tex()+")="+ mathtypes.Number(math.Pow(-1,float64(j-i+5))).Tex() +m+p.Tex()+m+mat.Rotate().Det().Tex()+"="+mat2.Rotate().Det().Tex()+"$"
+  }
 
 }
 

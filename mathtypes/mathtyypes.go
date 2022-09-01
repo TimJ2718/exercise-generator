@@ -1,15 +1,16 @@
 package mathtypes
 import (
 	"strconv"
-	//"fmt"
 	"math/rand"
   "math"
   "time"
 )
 
+
+//Calculations with integer
 type Number int
 type Vector []Number
-type Matrix [][]Number
+type Matrix []Vector
 
 
 func(mat Matrix) Tex() string{
@@ -41,7 +42,6 @@ func (mat Matrix) DetTex() string{
 	}
 	return "This is not implemented!"
 }
-
 func(mat Matrix) Transpose() Matrix{
 	var ret Matrix
 	for i:=0; i<len(mat); i++{
@@ -53,27 +53,15 @@ func(mat Matrix) Transpose() Matrix{
 	}
 	return ret
 }
-
 	//create a Matrix where the abosolute value of the product of each diagonal line is smaller 150
-	func Get3Matrix() Matrix{
-	  var max float64 = 150
-	  x := Matrix{{0,0,0},{0,0,0},{0,0,0}}
-	  for {
-	    for i :=0 ; i<3 ; i++{
-	      for {
-	        for j := 0; j <3; j++{
-	          x[i][j]= Random()
-	        }
-	        if math.Abs(float64(x[i][0]*x[i][1]*x[i][2])) < max{
-	          break
-	        }
+func Get3Matrix() Matrix{
+	  mat := Matrix{{0,0,0},{0,0,0},{0,0,0}}
+	  for i :=0 ; i<3 ; i++{
+	      for j := 0; j <3; j++{
+	        mat[i][j]= Number(RandomIntExcept(-6,6,[]int{0}))
 	      }
-	    }
-	    if (math.Abs(float64(x[0][0]*x[1][0]*x[2][0]))<max) && (math.Abs(float64(x[0][1]*x[1][1]*x[2][1]))<max) && (math.Abs(float64(x[0][2]*x[1][2]*x[2][2]))<max){
-	      break
-	    }
 	  }
-	  return Matrix{{x[0][0],x[1][0],x[2][0]},{x[2][1],x[0][1],x[1][1]},{x[1][2],x[2][2],x[0][2]}}
+	  return mat
 	}
 
 func AddVectorToRow(mat Matrix, vec Vector, row int) Matrix{
@@ -171,13 +159,23 @@ func(mat Matrix) Det() Number{
 	}
 }
 
-
+func(mat Matrix) Rotate() Matrix{
+	var ret Matrix
+	for i:=0; i<len(mat[0]);i++{
+		var x Vector
+		for j:=0; j<len(mat);j++{
+			x = append(x, mat[len(mat)-j-1][i])
+		}
+		ret = append(ret, x)
+	}
+	return ret
+}
 
 
 func GetVector(n int) Vector{
 	var ret Vector
 	for i :=0 ; i<n;i++{
-		ret = append(ret,Random())
+		ret = append(ret,Number(RandomIntExcept(-9,9,[]int{0})))
 		}
 	return ret
 }
@@ -235,3 +233,11 @@ func (num Number) Tex() string{
 		return strconv.Itoa(int(num))
 	}
 }
+
+//Calculations with fractions
+
+type Fraction struct {
+	n Number //numerator
+	d Number //denominator
+}
+type VectorF []Fraction
