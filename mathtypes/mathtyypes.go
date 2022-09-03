@@ -16,7 +16,7 @@ type Matrix []Vector
 func(mat Matrix) Tex() string{
 	ret :="\\left(\\begin{array}{"
 		for i:=0; i<len(mat[0]); i++ {
-			ret+="r"
+			ret+="c"
 		}
 		ret+="} \n"
 		for n:=0; n< len(mat); n++{
@@ -54,12 +54,14 @@ func(mat Matrix) Transpose() Matrix{
 	return ret
 }
 	//create a Matrix where the abosolute value of the product of each diagonal line is smaller 150
-func Get3Matrix() Matrix{
-	  mat := Matrix{{0,0,0},{0,0,0},{0,0,0}}
-	  for i :=0 ; i<3 ; i++{
-	      for j := 0; j <3; j++{
-	        mat[i][j]= Number(RandomIntExcept(-6,6,[]int{0}))
+func GetNXMMatrix(n,m int) Matrix{
+		var mat Matrix
+		for i :=0 ; i<n ; i++{
+				var x Vector
+	      for j := 0; j <m; j++{
+	        x= append(x,Number(RandomIntExcept(-6,6,[]int{0})))
 	      }
+				mat = append(mat,x)
 	  }
 	  return mat
 	}
@@ -174,9 +176,9 @@ func(mat Matrix) Rotate() Matrix{
 
 func GetVector(n int) Vector{
 	var ret Vector
-	for i :=0 ; i<n;i++{
+	for i :=0 ; i<n; i++{
 		ret = append(ret,Number(RandomIntExcept(-9,9,[]int{0})))
-		}
+	}
 	return ret
 }
 
@@ -240,4 +242,66 @@ type Fraction struct {
 	n Number //numerator
 	d Number //denominator
 }
+
 type VectorF []Fraction
+
+func (frac Fraction) Reduce() Fraction{
+	var max int
+	sign := Number(1)
+	if frac.n <0{
+		frac.n = -frac.n
+		sign = -sign
+	}
+	if frac.d <0{
+		frac.d = -frac.d
+		sign = -sign
+	}
+	if frac.n > frac.d{
+			max =int(frac.n)
+		} else{
+			max =int(frac.d)
+		}
+	for i:=0 ; i<max; i++{
+		if frac.n % Number(max-i) ==0 && frac.d & Number(max-i) ==0{
+			return Fraction{sign*frac.n,frac.d}
+		}
+	}
+	return Fraction{sign*frac.n,frac.d}
+}
+
+func (num Number) ToFraction() Fraction{
+	return Fraction{num,Number(1)}
+}
+
+func (vec Vector) ToVectorF() VectorF{
+	var ret VectorF
+	for i:=0;i<len(vec);i++{
+		ret = append(ret,vec[i].ToFraction())
+	}
+	return ret
+	}
+
+func (frac Fraction) Tex() string{
+	if frac.d == Number(1){
+		return frac.n.Tex()
+	}
+	return "\\frac{"+frac.n.Tex()+"}{"+frac.d.Tex()+"}"
+}
+
+func (vec VectorF) Tex() string{
+	ret := "\\left(\\begin{array}{c} \n "
+	for i:= 0; i <len(vec); i++{
+		ret += vec[i].Tex() +"\\\\ \n"
+	}
+	ret +="\\end{array}\\right)"
+	return ret
+}
+
+
+
+
+func MultiplF(f1, f2 Fraction) Fraction{
+	n:= f1.n*f2.d+f2.n*f1.d
+	d:= f1.d * f2.d
+	return Fraction{n,d}.Reduce()
+}

@@ -29,14 +29,14 @@ func generate2Mat() {
 
 
 func generate3Mat() {
-  mat := mathtypes.Get3Matrix()
+  mat := mathtypes.GetNXMMatrix(3,3)
   exercise+="$"+mat.Tex()+"$"
   solution+="$\\det("+mat.Tex()+") \\\\ \n"
   solution+=mat.DetTex()+"$"
 }
 
 func generate4Mat() {
-  mat:= mathtypes.Get3Matrix()
+  mat:= mathtypes.GetNXMMatrix(3,3)
   j:= mathtypes.RandomInt(0,3) //Position of new Row
   ic:=mathtypes.RandomInt(0,2) //Position of copied Column for new Column
   p:=mathtypes.Number(mathtypes.RandomIntExcept(-2,2,[]int{0})) //  Different Element for new Column
