@@ -54,12 +54,12 @@ func(mat Matrix) Transpose() Matrix{
 	return ret
 }
 	//create a Matrix where the abosolute value of the product of each diagonal line is smaller 150
-func GetNXMMatrix(n,m int) Matrix{
+func GetNXMMatrix(n,m,r int) Matrix{
 		var mat Matrix
 		for i :=0 ; i<n ; i++{
 				var x Vector
 	      for j := 0; j <m; j++{
-	        x= append(x,Number(RandomIntExcept(-6,6,[]int{0})))
+	        x= append(x,Number(RandomIntExcept(-r,r,[]int{0})))
 	      }
 				mat = append(mat,x)
 	  }
@@ -246,8 +246,11 @@ type Fraction struct {
 type VectorF []Fraction
 
 func (frac Fraction) Reduce() Fraction{
-	var max int
+	var min int
 	sign := Number(1)
+	if frac.n ==0{
+		return Fraction{0,1}
+	}
 	if frac.n <0{
 		frac.n = -frac.n
 		sign = -sign
@@ -256,14 +259,14 @@ func (frac Fraction) Reduce() Fraction{
 		frac.d = -frac.d
 		sign = -sign
 	}
-	if frac.n > frac.d{
-			max =int(frac.n)
+	if frac.n < frac.d{
+			min =int(frac.n)
 		} else{
-			max =int(frac.d)
+			min =int(frac.d)
 		}
-	for i:=0 ; i<max; i++{
-		if frac.n % Number(max-i) ==0 && frac.d & Number(max-i) ==0{
-			return Fraction{sign*frac.n,frac.d}
+	for i:=1 ; i<min; i++{
+		if frac.n % Number(min-i) ==0 && frac.d % Number(min-i) ==0{
+			return Fraction{Number(float64(sign*frac.n)/float64(min-i)),Number(float64(frac.d)/float64(min-i))}
 		}
 	}
 	return Fraction{sign*frac.n,frac.d}
@@ -271,6 +274,10 @@ func (frac Fraction) Reduce() Fraction{
 
 func (num Number) ToFraction() Fraction{
 	return Fraction{num,Number(1)}
+}
+
+func (frac Fraction) ToNumber() Number{
+	return frac.n
 }
 
 func (vec Vector) ToVectorF() VectorF{
@@ -298,9 +305,65 @@ func (vec VectorF) Tex() string{
 }
 
 
+func Dotproduct(v1, v2 VectorF) Fraction{
+	ret := Fraction{0,1}
+	for i:=0 ;i < len(v1);i++{
+		ret = AddF(ret,MultiplyF(v1[i],v2[i]))
+	}
+	return ret
+}
+func MultiplyF(f1, f2 Fraction) Fraction{
+	n:= f1.n*f2.n
+	d:= f1.d*f2.d
+	return Fraction{n,d}.Reduce()
+}
+func DivideF(f1, f2 Fraction) Fraction{
+	n:= f1.n*f2.d
+	d:= f1.d*f2.n
+	return Fraction{n,d}.Reduce()
+}
 
 
-func MultiplF(f1, f2 Fraction) Fraction{
+func ScalarVectorF(s Fraction, v VectorF) VectorF{
+	var ret VectorF
+	for i:=0 ; i< len(v); i++{
+		ret = append(ret,MultiplyF(s,v[i]))
+	}
+	return ret
+}
+
+func AddVectorF(v1, v2 VectorF) VectorF{
+	var ret VectorF
+	for i:=0 ;i <len(v1); i++{
+		ret = append(ret,AddF(v1[i],v2[i]))
+	}
+	return ret
+}
+func SubtractVectorF(v1, v2 VectorF) VectorF{
+	var ret VectorF
+	for i:=0 ;i <len(v1); i++{
+		ret = append(ret,SubtractF(v1[i],v2[i]))
+	}
+	return ret
+}
+
+func SubtractF(f1, f2 Fraction) Fraction{
+	n:= f1.n*f2.d-f2.n*f1.d
+	d:= f1.d * f2.d
+	return Fraction{n,d}.Reduce()
+}
+
+func IsPrime(num Number) bool {
+	x := int(num)
+	for i:=2; i<x; i++{
+		if x%i ==0{
+			return false
+		}
+	}
+	return true
+}
+
+func AddF(f1, f2 Fraction) Fraction{
 	n:= f1.n*f2.d+f2.n*f1.d
 	d:= f1.d * f2.d
 	return Fraction{n,d}.Reduce()
