@@ -30,6 +30,8 @@ func(mat Matrix) Tex() string{
 		ret+="\\end{array}\\right)"
 	return ret
 	}
+	
+//Determinant of 3x3 Matrix	
 func (mat Matrix) DetTex() string{
 	if len(mat)==3 && len(mat[0])==3{
 		m := " \\cdot "
@@ -236,6 +238,12 @@ func (num Number) Tex() string{
 	}
 }
 
+func (num Number) Abs() Number{
+	if num<0 {
+		return -num
+	}
+	return num
+}
 //Calculations with fractions
 
 type Fraction struct {
@@ -264,7 +272,7 @@ func (frac Fraction) Reduce() Fraction{
 		} else{
 			min =int(frac.d)
 		}
-	for i:=1 ; i<min; i++{
+	for i:=0 ; i<min; i++{
 		if frac.n % Number(min-i) ==0 && frac.d % Number(min-i) ==0{
 			return Fraction{Number(float64(sign*frac.n)/float64(min-i)),Number(float64(frac.d)/float64(min-i))}
 		}
@@ -304,6 +312,12 @@ func (vec VectorF) Tex() string{
 	return ret
 }
 
+func (frac Fraction) Getn() Number{
+	return frac.n
+}
+func (frac Fraction) Getd() Number{
+	return frac.d
+}
 
 func Dotproduct(v1, v2 VectorF) Fraction{
 	ret := Fraction{0,1}
