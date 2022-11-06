@@ -224,9 +224,9 @@ func RandomIntExcept(min,max int, blacklist []int) int{
 			for i:=0; i<len(blacklist);i++{
 				if ret == blacklist[i]{
 					continue OUTER
-				}
-			return ret
+				}			
 			}
+			return ret
 		}
 	}
 
@@ -312,6 +312,15 @@ func (vec VectorF) Tex() string{
 	return ret
 }
 
+func (vec Vector) Tex() string{
+	ret := "\\left(\\begin{array}{c} \n "
+	for i:= 0; i <len(vec); i++{
+		ret += vec[i].Tex() +"\\\\ \n"
+	}
+	ret +="\\end{array}\\right)"
+	return ret
+}
+
 func (frac Fraction) Getn() Number{
 	return frac.n
 }
@@ -319,13 +328,27 @@ func (frac Fraction) Getd() Number{
 	return frac.d
 }
 
-func Dotproduct(v1, v2 VectorF) Fraction{
+func DotproductF(v1, v2 VectorF) Fraction{
 	ret := Fraction{0,1}
 	for i:=0 ;i < len(v1);i++{
 		ret = AddF(ret,MultiplyF(v1[i],v2[i]))
 	}
 	return ret
 }
+
+func Crossproduct(v1, v2 Vector) Vector{
+	return Vector{(v1[1]*v2[2]-v1[2]*v2[1]) , (v1[2]*v2[0]-v1[0]*v2[2]) , (v1[0]*v2[1]-v1[1]*v2[0])}
+}
+
+
+func Dotproduct(v1, v2 Vector) Number{
+	ret := Number(0)
+	for i:=0 ;i < len(v1);i++{
+		ret = ret+v1[i]*v2[i]
+	}
+	return ret
+}
+
 func MultiplyF(f1, f2 Fraction) Fraction{
 	n:= f1.n*f2.n
 	d:= f1.d*f2.d
@@ -342,6 +365,14 @@ func ScalarVectorF(s Fraction, v VectorF) VectorF{
 	var ret VectorF
 	for i:=0 ; i< len(v); i++{
 		ret = append(ret,MultiplyF(s,v[i]))
+	}
+	return ret
+}
+
+func ScalarVector(s Number, v Vector) Vector{
+	var ret Vector
+	for i:=0 ; i< len(v); i++{
+		ret = append(ret,s*v[i])
 	}
 	return ret
 }

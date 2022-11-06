@@ -8,7 +8,6 @@ import (
 //n : Dimension of Vector
 //m : Number of Vectors
 func Generate(name string,n,m int){   
-  fmt.Printf("%v \n",n)
   if n <2{
     n =3
   }
@@ -41,7 +40,7 @@ func Generate(name string,n,m int){
       v:= mat[i].ToVectorF()
       if i+1<m{
         v2:= mat[i+1].ToVectorF()
-        if mathtypes.IsPrime(mathtypes.Dotproduct(v,v2).ToNumber()){ //Restart when dot products are prime numbers, because reducing is then not possible and numbers get large
+        if mathtypes.IsPrime(mathtypes.DotproductF(v,v2).ToNumber()){ //Restart when dot products are prime numbers, because reducing is then not possible and numbers get large
           continue OUTER
         }
       }
@@ -67,7 +66,7 @@ func Generate(name string,n,m int){
     //Put in numbers and already calculate dot products
     solution += newl + "=" + matF[i].Tex()
     for j:=0; j < i ; j++{
-      solution += "-"+"\\frac{"+mathtypes.Dotproduct(matF2[j],matF[i]).Tex() +"}"+"{"+mathtypes.Dotproduct(matF2[j],matF2[j]).Tex()+"}"+mp+matF2[j].Tex()
+      solution += "-"+"\\frac{"+mathtypes.DotproductF(matF2[j],matF[i]).Tex() +"}"+"{"+mathtypes.DotproductF(matF2[j],matF2[j]).Tex()+"}"+mp+matF2[j].Tex()
     }
     if i>0{
       solution+=newl+"="+matF[i].Tex()
@@ -76,8 +75,8 @@ func Generate(name string,n,m int){
     var v []mathtypes.VectorF
     v = append(v,matF[i])
     for j:=0; j<i ; j++{
-      s1:=mathtypes.Dotproduct(matF2[j],matF[i])
-      s2:=mathtypes.Dotproduct(matF2[j],matF2[j])
+      s1:=mathtypes.DotproductF(matF2[j],matF[i])
+      s2:=mathtypes.DotproductF(matF2[j],matF2[j])
       s3:=mathtypes.DivideF(s1,s2)
       v = append(v,mathtypes.ScalarVectorF(s3,matF2[j])) 
       for k:=0; k < len(v[j+1]); k++{ //Check for every vector that the numbers are not to large

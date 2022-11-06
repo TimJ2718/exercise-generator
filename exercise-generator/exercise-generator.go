@@ -42,6 +42,7 @@ func printhelp() {
 	help+="The exercise is saved in the file \"NameOfExercise-ex.tex\" and the solution in \"NameOfExercise-sol.tex\"\n"
 	help+="n and m are optional parameter. If no value is passed, the default value is used.\n"
 	help+="Exercises:\n"
+	help+=" \"crossproduct\" Calculate a vector orthogonal to two other vectors. \n"
 	help+=" \"determinat -n <nvalue>\"  n ∈ {2,3,4} \n   Calculate the determinat of a nxn Matrix.\n"
 	help+=" \"gramschmidt -n <nvalue> -m <mvalue>\"  n>=m, n,m ∈ {2,3,4} \n   Orthogonalise a set of m vectors with the dimension n.\n"
 	fmt.Printf(help)
