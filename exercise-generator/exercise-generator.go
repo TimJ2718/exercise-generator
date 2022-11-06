@@ -21,7 +21,9 @@ func main() {
 
 func recognise_parameter(i int, v string) {
 	switch v {
-	case "-help":
+	case "--help":
+		printhelp()
+	case "-h":
 		printhelp()
 	case "-n":
 		n, _ = strconv.Atoi(os.Args[i+2]) //+2 due to os.Args[1:]
